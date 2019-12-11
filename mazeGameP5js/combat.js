@@ -2,10 +2,7 @@ var fighting = false;
 var combatResult = "";
 
 function stateCombat(e) {
-  sfxWalk.stop();
-  for(var i = 0; i < enemySounds.length; i++){
-   enemySounds[i].stop();
-  }
+  stopSFX();
   background(200, 200, 100);
   //define combat
   copy(combatArt, s.offsetX*10/3, 0, 320, 320, 25, height/2, 320, 320);
@@ -53,6 +50,7 @@ function stateCombat(e) {
     textSize(64);
     fill(255);
     textAlign(CENTER, CENTER);
+    textLeading(50);
     text(combatResult, width/2, height/2);
   }
 }

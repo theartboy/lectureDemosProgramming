@@ -1,6 +1,7 @@
 function Pickup(pickupType, locX, locY) {
-    this.x=locX;
-    this.y= locY;
+    this.startLoc = createVector(locX, locY);
+    this.x=this.startLoc.x;
+    this.y= this.startLoc.y;
     this.w = 32;
     this.h = 32;
 
@@ -43,4 +44,7 @@ function Pickup(pickupType, locX, locY) {
   this.hide = function(){
    this.y = 0;
   }
-}
+  this.reset = function() {
+    this.x = this.startLoc.x;
+    this.y = this.startLoc.y;
+  }}

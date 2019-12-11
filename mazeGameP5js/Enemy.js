@@ -1,41 +1,41 @@
-function Enemy(character, startX, startY, wall) {
-  this.speed =1;
+function Enemy(character, locX, locY, wall) {
+  this.speed = 1;
 
+  this.startLoc = createVector(locX, locY);
+  this.x = this.startLoc.x;
+  this.y = this.startLoc.y;
+  this.w = 32;
+  this.h = 32;
+  this.sx = 0;
+  this.sy = 0;
+  this.row = 0;
+  this.vx = 0;
+  this.vy = 0;
+  //characters SLIME, BAT, GHOST, SPIDER
+  this.type = character / 3;
+  this.offsetX = character * 32;
+  this.offsetY = 4 * 32;
+  this.totalFrames = 3;
+  this.currentFrame = 0;
 
-    this.x=startX;
-    this.y=startY;
-    this.w = 32;
-    this.h = 32;
-    this.sx=0;
-    this.sy=0;
-    this.row=0;
-    this.vx = 0;
-    this.vy = 0;
-    //characters SLIME, BAT, GHOST, SPIDER
-    this.type = character/3;
-    this.offsetX=character*32;
-    this.offsetY=4*32;
-    this.totalFrames=3;
-    this.currentFrame=0;
+  this.delay = 4;
+  this.hold = 0;
 
-    this.delay = 4;
-    this.hold = 0;
+  this.collider = wall;
 
-    this.collider = wall;
+  this.moveLeft = false;
+  this.moveUp = false;
+  this.moveRight = false;
+  this.moveDown = false;
 
-    this.moveLeft = false;
-    this.moveUp = false;
-    this.moveRight = false;
-    this.moveDown = false;
+  //actions[0] = "Rock";
+  //actions[1] = "Paper";
+  //actions[2] = "Scissors";
+  this.dead = false;
 
-    //actions[0] = "Rock";
-    //actions[1] = "Paper";
-    //actions[2] = "Scissors";
-    this.dead = false;
+  this.actions = [];
 
-    this.actions = [];
-
-    switch (character) {
+  switch (character) {
     case SLIME:
       this.actions[0] = "Acid Dissolve";
       this.actions[1] = "Suffocate";
@@ -59,12 +59,17 @@ function Enemy(character, startX, startY, wall) {
       this.actions[1] = "Web Wrap";
       this.actions[2] = "Leg Crush";
       break;
-    }
+  }
 
   this.hide = function() {
     this.x = 0;
-    this.y = 0;
+    this.y = -32;
     this.dead = true;
+  }
+  this.reset = function() {
+    this.x = this.startLoc.x;
+    this.y = this.startLoc.y;
+    this.dead = false;
   }
   this.update = function() {
     if (dist(s.x, s.y, this.x, this.y) < 200 && !this.dead) {
@@ -99,25 +104,25 @@ function Enemy(character, startX, startY, wall) {
       this.moveDown = false;
     }
 
-    if (this.moveLeft&&!this.moveRight) {
+    if (this.moveLeft && !this.moveRight) {
       this.vx = -1;
       this.row = 1;
     }
-    if (this.moveRight&&!this.moveLeft) {
+    if (this.moveRight && !this.moveLeft) {
       this.vx = 1;
       this.row = 2;
     }
-    if (!this.moveLeft&&!this.moveRight&&!this.moveUp&&!this.moveDown) {
+    if (!this.moveLeft && !this.moveRight && !this.moveUp && !this.moveDown) {
       this.vx = 0;
       this.vy = 0;
       //row = 0;
       this.currentFrame = 1;
     }
-    if (this.moveUp&&!this.moveDown) {
+    if (this.moveUp && !this.moveDown) {
       this.vy = -1;
       this.row = 3;
     }
-    if (this.moveDown&&!this.moveUp) {
+    if (this.moveDown && !this.moveUp) {
       this.vy = 1;
       this.row = 0;
     }
@@ -130,8 +135,8 @@ function Enemy(character, startX, startY, wall) {
     this.sy = this.row * this.h;
 
     //audio stuff
-    if (this.vx==0 && this.vy==0) {
-      if (enemySounds[this.type].isPlaying()==true) {
+    if (this.vx == 0 && this.vy == 0) {
+      if (enemySounds[this.type].isPlaying() == true) {
         enemySounds[this.type].pause();
       }
     } else if (enemySounds[this.type].isPlaying() == false) {
@@ -142,11 +147,11 @@ function Enemy(character, startX, startY, wall) {
   this.display = function() {
     copy(sheet, this.sx + this.offsetX, this.sy + this.offsetY, this.w, this.h, this.x, this.y, this.w, this.h);
 
-    this.hold = (this.hold + 1)%this.delay;
+    this.hold = (this.hold + 1) % this.delay;
     if (this.hold == 0) {
       this.currentFrame++;
       if (this.currentFrame == this.totalFrames) {
-        this.currentFrame=0;
+        this.currentFrame = 0;
       }
     }
   }
