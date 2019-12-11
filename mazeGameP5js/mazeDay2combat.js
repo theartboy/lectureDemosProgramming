@@ -31,6 +31,7 @@ var art;
 var sheet;
 var objects;
 var combatArt;
+var characterChoice;
 
 var pickups = [];
 var score;
@@ -72,6 +73,7 @@ function preload() {
   sheet = loadImage("data/images/characters2x.png");
   objects = loadImage("data/images/pickups.png");
   combatArt = loadImage("data/images/combat.png");
+  characterChoice = loadImage("data/images/characterChoice.png");
 
   //sounds
   //sfx
@@ -157,18 +159,50 @@ function draw() {
 }
 
 function stateStart() {
-  background(0, 0, 255);
+  background(100, 100, 255);
   fill(255);
   textAlign(CENTER);
-  text("Press to Start", width / 2, height / 2 - 100);
+  textSize(48);
+  text("Choose your Character", width / 2, height / 2 - 100);
   textAlign(LEFT);
-  ellipse(width / 2, height / 2, 100, 100);
-  if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2) < 50) {
-    if (!music.isPlaying()){
-      music.play();
-    }
-    gameState = "PLAY";
+  copy(characterChoice, 0, 0, 128, 128, 28, 300, 128, 128);
+  copy(characterChoice, 128, 0, 128, 128, 180, 300, 128, 128);
+  copy(characterChoice, 256, 0, 128, 128, 332, 300, 128, 128);
+  copy(characterChoice, 384, 0, 128, 128, 484, 300, 128, 128);
+  if (mouseIsPressed &&
+    mouseX > 28 && mouseX < 156 &&
+    mouseY > 300 && mouseY < 428) {
+    changeToPlay(SKIN);
   }
+  if (mouseIsPressed &&
+    mouseX > 180 && mouseX < 308 &&
+    mouseY > 300 && mouseY < 428) {
+    changeToPlay(BOY);
+  }
+  if (mouseIsPressed &&
+    mouseX > 332 && mouseX < 460 &&
+    mouseY > 300 && mouseY < 428) {
+    changeToPlay(GIRL);
+  }
+  if (mouseIsPressed &&
+    mouseX > 484 && mouseX < 612 &&
+    mouseY > 300 && mouseY < 428) {
+    changeToPlay(BONE);
+  }
+  // if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2) < 50) {
+  //   if (!music.isPlaying()){
+  //     music.play();
+  //   }
+  //   gameState = "PLAY";
+  // }
+}
+
+function changeToPlay(characterType) {
+  s = new Sprite(characterType);
+  if (!music.isPlaying()) {
+    music.play();
+  }
+  gameState = "PLAY";
 }
 
 function statePlay() {
@@ -242,10 +276,10 @@ function stateWin() {
   background(0, 255, 0);
   fill(255);
   textAlign(CENTER);
-  text("Winner, Winner, Chicken Dinner", width / 2, height / 2 - 100);
+  text("Winner, Winner, Chicken Dinner", width / 2, height / 2 - 200);
   textAlign(LEFT);
-  ellipse(width / 2, height / 2, 100, 100);
-  if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2) < 50) {
+  ellipse(width / 2, height / 2-100, 100, 100);
+  if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2-100) < 50) {
     gameState = "RESET";
   }
 }
@@ -255,10 +289,10 @@ function stateLose() {
   background(255, 0, 0);
   fill(255);
   textAlign(CENTER);
-  text("Loser all day long", width / 2, height / 2 - 100);
+  text("Loser all day long", width / 2, height / 2 - 200);
   textAlign(LEFT);
-  ellipse(width / 2, height / 2, 100, 100);
-  if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2) < 50) {
+  ellipse(width / 2, height / 2-100, 100, 100);
+  if (mouseIsPressed && dist(mouseX, mouseY, width / 2-100, height / 2) < 50) {
     gameState = "RESET";
   }
 }
@@ -276,12 +310,14 @@ function stateReset() {
   }
   gameState = "START";
 }
-function stopSFX(){
+
+function stopSFX() {
   sfxWalk.stop();
-  for(var i = 0; i < enemySounds.length; i++){
-   enemySounds[i].stop();
+  for (var i = 0; i < enemySounds.length; i++) {
+    enemySounds[i].stop();
   }
 }
+
 function rectangleIntersect(r1, r2) {
   //what is the distance apart on x-axis
   var distanceX = (r1.x + r1.w / 2) - (r2.x + r2.w / 2);
